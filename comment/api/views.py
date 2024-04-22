@@ -35,5 +35,6 @@ class CommentDeleteAPIView(DestroyAPIView):
     serializer_class = CommentUpdateDeleteSerializer
     lookup_field = 'pk'
     permission_classes = [IsOwner]
+    #comment line
 
 
