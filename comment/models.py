@@ -18,7 +18,7 @@ class Comment(models.Model):
         ordering = ('created_date',)
 
     def __str__(self):
-        return self.post.title + ' ' + self.user.username
+        return self.post.title + ' / ' + self.content + ' user : ' + self.user.username
 
     def save(self, *args, **kwargs):
         if not self.id:

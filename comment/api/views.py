@@ -1,6 +1,7 @@
 from rest_framework.generics import CreateAPIView, ListAPIView, \
-    UpdateAPIView, DestroyAPIView
+    UpdateAPIView, DestroyAPIView, RetrieveAPIView
 
+from comment.api.paginations import CommentPagination
 from comment.api.serializers import CommentCreateSerializer, \
     CommentListSerializer, CommentUpdateDeleteSerializer
 from comment.models import Comment
@@ -17,13 +18,19 @@ class CommentCreateAPIView(CreateAPIView):
 
 
 class CommentListAPIView(ListAPIView):
+    pagination_class = CommentPagination
     serializer_class = CommentListSerializer
 
     def get_queryset(self):
-        return Comment.objects.filter(parent=None)
+        queryset = Comment.objects.filter(parent=None)
+        query = self.request.GET.get("post")
+        if query:
+            queryset = queryset.filter(post=query)
+        return queryset
 
 
-class CommentUpdateAPIView(UpdateAPIView):
+
+class CommentUpdateAPIView(UpdateAPIView, RetrieveAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentUpdateDeleteSerializer
     lookup_field = 'pk'

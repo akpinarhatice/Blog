@@ -1,7 +1,9 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
 from comment.models import Comment
+from post.models import Post
 
 
 class CommentCreateSerializer(ModelSerializer):
@@ -16,8 +18,21 @@ class CommentCreateSerializer(ModelSerializer):
         return attrs
 
 
+class UserSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email')
+
+
+class PostCommentSerializer(ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ('title', 'slug', 'id')
+
 class CommentListSerializer(ModelSerializer):
     replies = SerializerMethodField()
+    user = UserSerializer()
+    post = PostCommentSerializer()
 
     class Meta:
         model = Comment
